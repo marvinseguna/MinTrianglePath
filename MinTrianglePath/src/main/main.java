@@ -6,6 +6,9 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 
+import Algorithm.Node;
+import Algorithm.Processor;
+
 public class main 
 {
 	private static Scanner reader;
@@ -18,10 +21,10 @@ public class main
 		switch( choice ) 
 		{
 			case 1: 
-				bestPath = readCLI();
+				bestPath = readCLI().toString();
 				break;
 			case 2: 
-				bestPath = readFile();
+				bestPath = readFile().toString();
 				break;
 			default: 
 				System.out.println( "Exiting.." );
@@ -47,21 +50,21 @@ public class main
 		return choice;
 	}
 	
-	public static String readCLI()
+	public static Node readCLI()
 	{
 		//Read user input in string
 		String userInput = "";
+		Processor processor = new Processor();
 		
 		// Change user input to upper case to match EOF even if lower case
 		while( !userInput.toUpperCase().equals( "EOF" ) )
 		{
-			userInput = reader.nextLine();
-			// Begin processing user input here
-			System.out.println( userInput );
+			userInput = reader.next();
+			processor.processNodes( userInput.split( "\\s+" ) );
 		}
 		
 		// Return answer
-		return "";
+		return processor.getBestNode();
 	}
 	
 	public static String readFile()
