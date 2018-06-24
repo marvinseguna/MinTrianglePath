@@ -6,12 +6,12 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Scanner;
 
-import Algorithm.Node;
 import Algorithm.Processor;
 
 public class main 
 {
 	private static Scanner reader;
+	private static Processor processor = new Processor();
 	
 	public static void main( String args[] )
 	{
@@ -21,10 +21,10 @@ public class main
 		switch( choice ) 
 		{
 			case 1: 
-				bestPath = readCLI().toString();
+				bestPath = readCLI();
 				break;
 			case 2: 
-				bestPath = readFile().toString();
+				bestPath = readFile();
 				break;
 			default: 
 				System.out.println( "Exiting.." );
@@ -45,26 +45,31 @@ public class main
 		
 		// Read input
 		int choice = reader.nextInt();
+		reader.nextLine();
 		
 		// Return user choice
 		return choice;
 	}
 	
-	public static Node readCLI()
+	public static String readCLI()
 	{
 		//Read user input in string
 		String userInput = "";
-		Processor processor = new Processor();
 		
 		// Change user input to upper case to match EOF even if lower case
-		while( !userInput.toUpperCase().equals( "EOF" ) )
+		while( true )
 		{
-			userInput = reader.next();
+			userInput = reader.nextLine();
+			if( userInput.toUpperCase().equals( "EOF" ) )
+			{
+				break;
+			}
+			// split spaces... such that "6 3" -> [6,3]
 			processor.processNodes( userInput.split( "\\s+" ) );
 		}
 		
 		// Return answer
-		return processor.getBestNode();
+		return processor.getBestNode().toString();
 	}
 	
 	public static String readFile()
@@ -85,8 +90,7 @@ public class main
 				
 				while( ( line = br.readLine() ) != null )
 				{
-					// Begin processing user input here
-					System.out.println( line );
+					processor.processNodes( line.split( "\\s+" ) );
 				}
 				
 				// Close all readers
@@ -104,6 +108,6 @@ public class main
 		}
 		
 		// Return answer
-		return "";
+		return processor.getBestNode().toString();
 	}
 }

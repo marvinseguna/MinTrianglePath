@@ -1,6 +1,7 @@
 package Algorithm;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class Processor {
 	
@@ -14,7 +15,8 @@ public class Processor {
 	
 	private Node workNode( int index, int value )
 	{
-		Node node = parents.get( index );
+		Node parentNode = parents.get( index );
+		Node node = new Node( parentNode.getTotalValue(), parentNode.getPath() );
 		node.merge( value );
 		
 		if( bestNode == null || bestNode.getTotalValue() > node.getTotalValue() )
@@ -32,7 +34,7 @@ public class Processor {
 		if( parents.isEmpty() )
 		{
 			int value = Integer.parseInt( arr[0] );
-			parents.add( new Node( value, value ) );
+			parents.add( new Node( value, arr[0] ));
 		}
 		else
 		{
@@ -47,7 +49,9 @@ public class Processor {
 				// first and last nodes will always have 1 parent
 				if( i == 0 || i == arr.length - 1 )
 				{
-					newParents.add( workNode( i, value ) );
+					// if first element, 0. Else, i-1
+					int index = ( i == 0 ? 0 : ( i - 1 ) );
+					newParents.add( workNode( index, value ) );
 				}
 				// other nodes will always have 2 parents
 				else
