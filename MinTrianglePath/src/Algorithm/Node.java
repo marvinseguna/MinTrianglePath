@@ -1,43 +1,42 @@
 package Algorithm;
 
-import java.util.ArrayList;
-
 public class Node
 {
-	private int totalValue;
-	private String path; // as we do not know the length of path!
+	private int originalValue; // as entered by the user / through file
+	private int sumValue; // added sum during the iteration
+	private int parent; // index of parent in the maintained list of nodes. Used to get the best path
 	
 	public Node()
 	{
-		totalValue = 0;
-		path = "";
+		originalValue = sumValue = 0;
+		parent = -1;
 	}
 	
-	public Node( int totalValue, String path )
+	public Node( int value )
 	{
-		this.totalValue = totalValue;
-		this.path = path;
+		originalValue = sumValue = value;
+		parent = -1;
 	}
 	
-	public int getTotalValue()
+	public Node( int originalValue, int sumValue, int parent )
 	{
-		return totalValue;
+		this.originalValue = originalValue;
+		this.sumValue = sumValue;
+		this.parent = parent;
 	}
 	
-	public String getPath()
+	public int getOriginal()
 	{
-		return path;
+		return originalValue;
 	}
 	
-	// merge will increment the totalValue and add the passed argument to path
-	public void merge( int value )
+	public int getSum()
 	{
-		totalValue += value;
-		path += "," + value;
+		return sumValue;
 	}
 	
-	public String toString()
+	public int getParent()
 	{
-		return "Best Path\nValue: " + totalValue + ", Path: " + path;
+		return parent;
 	}
 }

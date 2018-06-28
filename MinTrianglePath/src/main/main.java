@@ -69,7 +69,7 @@ public class main
 		}
 		
 		// Return answer
-		return processor.getBestNode().toString();
+		return processor.getBestPath();
 	}
 	
 	public static String readFile()
@@ -108,6 +108,6 @@ public class main
 		}
 		
 		// Return answer
-		return processor.getBestNode().toString();
+		return processor.getBestPath();
 	}
 }

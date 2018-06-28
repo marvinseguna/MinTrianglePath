@@ -1,68 +1,88 @@
 package Algorithm;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class Processor {
 	
-	private ArrayList<Node> parents = new ArrayList<Node>();
-	private Node bestNode = new Node();
+	private ArrayList<Node> nodes = new ArrayList<Node>();
+	private int bestNodeIndex;
+	private int nextParent = 0;
 	
-	public Node getBestNode()
+	public String getBestPath()
 	{
-		return bestNode;
+		int index = bestNodeIndex;
+		String path = "";
+		while( index != -1 )
+		{
+			Node node = nodes.get( index );
+			path = "+" + node.getOriginal() + path;
+			index = node.getParent();
+		}
+		return "Minimal path is: " + path.substring( 1 ) + " = " + nodes.get( bestNodeIndex ).getSum();
 	}
 	
-	private Node workNode( int index, int value )
+	private void setBestNode( int sumValue, int index )
 	{
-		Node parentNode = parents.get( index );
-		Node node = new Node( parentNode.getTotalValue(), parentNode.getPath() );
-		node.merge( value );
-		
-		if( bestNode == null || bestNode.getTotalValue() > node.getTotalValue() )
+		if( bestNodeIndex == -1 )
 		{
-			bestNode = node;
+			bestNodeIndex = index;
 		}
-		return node;
+		else
+		{
+			Node bestNode = nodes.get( bestNodeIndex );
+			if( bestNode.getSum() > sumValue )
+			{
+				bestNodeIndex = index;
+			}
+		}
+		
 	}
 	
 	public void processNodes( String[] arr )
 	{
-		// re-initialise bestNode such that it is calculated for every level
-		bestNode = null;
+		bestNodeIndex = -1; // for each level, reset this to re-compare with the current nodes level
 		
-		if( parents.isEmpty() )
+		if( nodes.isEmpty() ) // this means that we are still in the root
 		{
 			int value = Integer.parseInt( arr[0] );
-			parents.add( new Node( value, arr[0] ));
+			nodes.add( new Node( value ) );
+			bestNodeIndex = 0;
 		}
 		else
 		{
-			// Each new node processed will be inserted in this array.
-			// After processing, this will be considered as the parents list.
-			ArrayList<Node> newParents = new ArrayList<Node>();
-			
 			for( int i = 0; i < arr.length; i++ )
 			{
 				int value = Integer.parseInt( arr[i] );
 				
-				// first and last nodes will always have 1 parent
-				if( i == 0 || i == arr.length - 1 )
+				if( i == 0 || i == arr.length - 1 ) // if first or last node in level, it only has 1 parent!
 				{
-					// if first element, 0. Else, i-1
-					int index = ( i == 0 ? 0 : ( i - 1 ) );
-					newParents.add( workNode( index, value ) );
+					Node parent = nodes.get( nextParent );
+					int sumValue = parent.getSum() + value;
+					nodes.add( new Node( value, sumValue, nextParent ) );
+					setBestNode( sumValue, nodes.size() - 1 );
 				}
-				// other nodes will always have 2 parents
 				else
 				{
-					newParents.add( workNode( i - 1, value ) );
-					newParents.add( workNode( i, value ) );
+					Node parent1 = nodes.get( nextParent );
+					Node parent2 = nodes.get( nextParent + 1 );
+					
+					if( parent1.getSum() > parent2.getSum() )
+					{
+						int sumValue = parent2.getSum() + value;
+						nodes.add( new Node( value, sumValue, nextParent + 1 ) );
+						setBestNode( sumValue, nodes.size() - 1 );
+					}
+					else
+					{
+						int sumValue = parent1.getSum() + value;
+						nodes.add( new Node( value, sumValue, nextParent ) );
+						setBestNode( sumValue, nodes.size() - 1 );
+					}
+					
+					nextParent += 1;
 				}
 			}
-			// assign parents to the current list
-			parents = newParents;
+			nextParent += 1;
 		}
 	}
-	
 }
