@@ -13,7 +13,7 @@ public class main
 	private static Scanner reader;
 	private static Processor processor = new Processor();
 	
-	public static void main( String args[] )
+	public static void main( final String args[] )
 	{
 		reader = new Scanner( System.in );
 		int choice = askForUserInput();
